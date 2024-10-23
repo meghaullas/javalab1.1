@@ -1,0 +1,91 @@
+import java.util.Scanner;
+
+public class CreditCardValidator {
+    private String ccNumber;
+
+    public CreditCardValidator(String ccNumber) {
+        this.ccNumber = ccNumber;
+    }
+
+    public void validateCard() {
+        int length = ccNumber.length();
+
+        if (length < 8 || length > 9) {
+            System.out.println("Invalid credit card number");
+            return;
+        }
+
+        int lastDigit = Integer.parseInt(ccNumber.substring(length - 1));
+        String remainingNumber = ccNumber.substring(0, length - 1);
+
+        String reversedNumber = "";
+        int totalSum = 0;
+        int calculatedDigit = 0;
+
+        StringBuilder processedNumber = new StringBuilder();
+
+        int step = 1;
+
+        switch (step) {
+            case 1:
+                reversedNumber = new StringBuilder(remainingNumber).reverse().toString();
+                System.out.println("Step b: Reversed number: " + reversedNumber);
+             
+
+            case 2: 
+                for (int i = 0; i < reversedNumber.length(); i++) {
+                    int digit = Integer.parseInt(String.valueOf(reversedNumber.charAt(i)));
+                    
+                  
+                    if ((i + 1) % 2 != 0) {
+               12         digit *= 2;
+                       
+                        if (digit > 9) {
+                            digit = digit / 10 + digit % 10;
+                        }
+                    }
+                    processedNumber.append(digit);
+                }
+                System.out.println("Step c: Processed number after doubling odd positions: " + processedNumber);
+              
+
+            case 3:
+                for (int i = 0; i < processedNumber.length(); i++) {
+                    totalSum += Integer.parseInt(String.valueOf(processedNumber.charAt(i)));
+                }
+                System.out.println("Step d: Sum of all digits: " + totalSum);
+                
+
+            case 4: 
+                calculatedDigit = 10 - (totalSum % 10);
+                System.out.println("Step e: Calculated check digit: " + calculatedDigit);
+              
+
+            case 5: 
+                if (calculatedDigit == lastDigit) {
+                    System.out.println("Credit card number is VALID.");
+                } else {
+                    System.out.println("Credit card number is INVALID.");
+                }
+                break;
+
+            default:
+                System.out.println("Invalid operation");
+                break;
+        }
+    }
+
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter credit card number: ");
+        String ccNumber = scanner.nextLine();
+
+        
+        CreditCardValidator validator = new CreditCardValidator(ccNumber);
+
+        
+        validator.validateCard();
+    }
+}
