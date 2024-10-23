@@ -3,43 +3,50 @@ import java.util.Scanner;
 public class CreditCardValidator {
     private String ccNumber;
 
+    // Constructor to initialize the credit card number
     public CreditCardValidator(String ccNumber) {
         this.ccNumber = ccNumber;
     }
 
+    // Function to validate the credit card number
     public void validateCard() {
         int length = ccNumber.length();
 
+        // Step 1: Check if number has 8 or 9 digits
         if (length < 8 || length > 9) {
             System.out.println("Invalid credit card number");
             return;
         }
 
+        // Extract the last digit (Step a)
         int lastDigit = Integer.parseInt(ccNumber.substring(length - 1));
         String remainingNumber = ccNumber.substring(0, length - 1);
 
+        // Initial variables
         String reversedNumber = "";
         int totalSum = 0;
         int calculatedDigit = 0;
 
+        // Ensure processedNumber is initialized
         StringBuilder processedNumber = new StringBuilder();
 
+        // Switch case structure to perform steps
         int step = 1;
 
         switch (step) {
-            case 1:
+            case 1: // Step b: Reverse the remaining number
                 reversedNumber = new StringBuilder(remainingNumber).reverse().toString();
                 System.out.println("Step b: Reversed number: " + reversedNumber);
-             
+                // Fall through to the next step
 
-            case 2: 
+            case 2: // Step c: Double the digits in odd positions
                 for (int i = 0; i < reversedNumber.length(); i++) {
                     int digit = Integer.parseInt(String.valueOf(reversedNumber.charAt(i)));
                     
-                  
+                    // Double digits in odd positions
                     if ((i + 1) % 2 != 0) {
-               12         digit *= 2;
-                       
+                        digit *= 2;
+                        // If result is double digit, sum the digits
                         if (digit > 9) {
                             digit = digit / 10 + digit % 10;
                         }
@@ -47,21 +54,21 @@ public class CreditCardValidator {
                     processedNumber.append(digit);
                 }
                 System.out.println("Step c: Processed number after doubling odd positions: " + processedNumber);
-              
+                // Fall through to the next step
 
-            case 3:
+            case 3: // Step d: Sum all the digits
                 for (int i = 0; i < processedNumber.length(); i++) {
                     totalSum += Integer.parseInt(String.valueOf(processedNumber.charAt(i)));
                 }
                 System.out.println("Step d: Sum of all digits: " + totalSum);
-                
+                // Fall through to the next step
 
-            case 4: 
+            case 4: // Step e: Subtract the last digit from 10
                 calculatedDigit = 10 - (totalSum % 10);
                 System.out.println("Step e: Calculated check digit: " + calculatedDigit);
-              
+                // Fall through to the next step
 
-            case 5: 
+            case 5: // Step f: Compare the result with the last digit
                 if (calculatedDigit == lastDigit) {
                     System.out.println("Credit card number is VALID.");
                 } else {
@@ -75,17 +82,17 @@ public class CreditCardValidator {
         }
     }
 
-    
+    // Main method to test the functionality
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter credit card number: ");
         String ccNumber = scanner.nextLine();
 
-        
+        // Create a CreditCardValidator instance
         CreditCardValidator validator = new CreditCardValidator(ccNumber);
 
-        
+        // Call the validation method
         validator.validateCard();
     }
 }
